@@ -4,8 +4,21 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ReadingViewModel
+    @AppStorage("onboardingComplete") private var onboardingComplete: Bool = false
 
     var body: some View {
+        Group {
+            if onboardingComplete {
+                mainApp
+            } else {
+                OnboardingContainerView()
+                    .environmentObject(viewModel)
+            }
+        }
+        .animation(.easeInOut(duration: 0.5), value: onboardingComplete)
+    }
+
+    private var mainApp: some View {
         NavigationStack {
             HomeView()
                 .navigationDestination(isPresented: $viewModel.showClarityView) {

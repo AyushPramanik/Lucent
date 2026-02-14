@@ -37,6 +37,39 @@ final class ReadingViewModel: ObservableObject {
 
     @Published var showClarityView: Bool = false
 
+    // MARK: - Init
+
+    init() {
+        loadPreferences()
+    }
+
+    /// Load personalized preferences from @AppStorage / UserDefaults.
+    /// Called on init and again after onboarding completes.
+    func loadPreferences() {
+        let defaults = UserDefaults.standard
+
+        // Only apply if onboarding has stored values (check for sentinel key)
+        if defaults.object(forKey: "prefTextSize") != nil {
+            textSize = defaults.double(forKey: "prefTextSize")
+        }
+        if defaults.object(forKey: "prefLineSpacing") != nil {
+            lineSpacing = defaults.double(forKey: "prefLineSpacing")
+        }
+        if defaults.object(forKey: "prefLetterSpacing") != nil {
+            letterSpacing = defaults.double(forKey: "prefLetterSpacing")
+        }
+        if defaults.object(forKey: "prefFocusMode") != nil {
+            focusModeEnabled = defaults.bool(forKey: "prefFocusMode")
+        }
+        if defaults.object(forKey: "prefHighlightSentence") != nil {
+            highlightSentenceEnabled = defaults.bool(forKey: "prefHighlightSentence")
+        }
+        if defaults.object(forKey: "prefSpeechRate") != nil {
+            let rate = defaults.double(forKey: "prefSpeechRate")
+            if rate > 0 { speechRate = rate }
+        }
+    }
+
     // MARK: - Processing
 
     /// Run the text processing pipeline on the raw text
